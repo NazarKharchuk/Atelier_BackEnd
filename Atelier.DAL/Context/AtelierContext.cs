@@ -12,7 +12,13 @@ namespace Atelier.DAL.Context
         public DbSet<Material> Materials { get; set; }
         public DbSet<Order> Orders { get; set; }
 
-        public AtelierContext()
+        public AtelierContext(DbContextOptions<AtelierContext> options)
+            : base(options)
+        {
+            Database.EnsureCreated();
+        }
+
+        /*public AtelierContext()
         {
             Database.EnsureCreated();
         }
@@ -20,7 +26,7 @@ namespace Atelier.DAL.Context
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             optionsBuilder.UseSqlServer(@"Server=(localdb)\MSSQLLocalDB;Database=LocalAtelierDB;Trusted_Connection=True;");
-        }
+        }*/
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

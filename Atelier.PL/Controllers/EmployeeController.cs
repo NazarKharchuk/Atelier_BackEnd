@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Atelier.PL.Controllers
 {
-    //[Authorize(Roles = "Admin")]
+    //[Authorize]
     [ApiController]
     public class EmployeeController : ControllerBase
     {
@@ -20,6 +20,7 @@ namespace Atelier.PL.Controllers
             _mapper = mapper;
         }
 
+        //[Authorize(Roles = "Admin")]
         [Route("api/employees")]
         [HttpGet]
         public IActionResult GetEmployees([FromQuery] FilteredListRequestModel filter)
@@ -32,6 +33,7 @@ namespace Atelier.PL.Controllers
             });
         }
 
+        //[Authorize(Roles = "Admin")]
         [Route("api/employees/{id}")]
         [HttpDelete]
         public async Task<IActionResult> DeleteEmployee(int id)
@@ -51,6 +53,7 @@ namespace Atelier.PL.Controllers
             }
         }
 
+        //[Authorize(Roles = "Admin")]
         [Route("api/employees")]
         [HttpPost]
         public async Task<IActionResult> PostEmployee([FromBody] EmployeeRegisterModel item)
@@ -70,7 +73,6 @@ namespace Atelier.PL.Controllers
             }
         }
 
-        //[Authorize(Roles = "Admin, User")]
         [Route("api/employees/firstNames")]
         [HttpGet]
         public IActionResult GetFirstNames()
@@ -78,7 +80,6 @@ namespace Atelier.PL.Controllers
             return new ObjectResult(new ResponseModel<List<string>>() { Seccessfully = true, Data = employeeService.GetFirstNames() });
         }
 
-        //[Authorize(Roles = "Admin, User")]
         [Route("api/employees/selectData")]
         [HttpGet]
         public IActionResult GetDataForSelect()

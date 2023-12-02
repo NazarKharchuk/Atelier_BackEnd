@@ -2,6 +2,7 @@
 using Atelier.BLL.Interfaces;
 using Atelier.PL.Models;
 using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace Atelier.PL.Controllers

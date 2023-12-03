@@ -8,6 +8,8 @@ using Atelier.DAL.Repositories;
 using Atelier.PL.Mapping.Client;
 using Atelier.PL.Mapping.Employee;
 using Atelier.PL.Mapping.Material;
+using Atelier.PL.Mapping.Order;
+using Atelier.PL.Mapping.OrderMaterial;
 using Atelier.PL.Mapping.Request;
 using Atelier.PL.Mapping.User;
 using Atelier.PL.Mapping.WorksType;
@@ -48,6 +50,7 @@ namespace Atelier.PL
             builder.Services.AddScoped<IMaterialService<MaterialDTO>, MaterialService>();
             builder.Services.AddScoped<IUserService<UserDTO>, UserService>();
             builder.Services.AddScoped<IEmployeeService<EmployeeDTO>, EmployeeService>();
+            builder.Services.AddScoped<IOrderService<OrderDTO>, OrderService>();
 
             var optionsBuilder = new DbContextOptionsBuilder<AtelierContext>();
             
@@ -58,10 +61,12 @@ namespace Atelier.PL
             builder.Services.AddScoped<IUnitOfWork, UnitOfWork>(s => new UnitOfWork(options));
 
             builder.Services.AddAutoMapper(typeof(UserProfile), typeof(ClientProfile), typeof(EmployeeProfile), typeof(MaterialProfile),
-                typeof(WorksTypeProfile), typeof(UserLoginModelProfile), typeof(MaterialModelProfile), typeof(EmployeeModelProfile),
-                typeof(EmployeeRegisterModelProfile), typeof(ClientModelProfile), typeof(WorksTypeModelProfile),
-                typeof(FilteredClientListRequestModelPrifile), typeof(FilteredMaterialListRequestModelPrifile),
-                typeof(FilteredListRequestModelPrifile), typeof(ResponseIdAndStringModelProfile), typeof(AuthorizationResponseModelProfile));
+                typeof(OrderProfile), typeof(OrderMaterialProfile), typeof(WorksTypeProfile), typeof(UserLoginModelProfile),
+                typeof(MaterialModelProfile), typeof(EmployeeModelProfile), typeof(EmployeeRegisterModelProfile),
+                typeof(ClientModelProfile), typeof(WorksTypeModelProfile), typeof(OrderModelProfile), typeof(OrderMaterialModelProfile),
+                typeof(OrderRequestMaterialModelProfile), typeof(FilteredClientListRequestModelPrifile), typeof(FilteredMaterialListRequestModelPrifile),
+                typeof(FilteredListRequestModelPrifile), typeof(FilteredOrderListRequestModelPrifile), typeof(ResponseIdAndStringModelProfile),
+                typeof(MonthStatisticResponseModelProfile), typeof(AuthorizationResponseModelProfile));
 
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();

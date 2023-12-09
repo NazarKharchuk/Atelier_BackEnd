@@ -55,5 +55,33 @@ namespace Atelier.PL.Controllers
                 });
             }
         }
+
+        [Authorize]
+        [Route("api/token/verify")]
+        [HttpGet]
+        public async Task<IActionResult> VerifyTokenAsync()
+        {
+            try
+            {
+                var token = HttpContext.Request.Headers["Authorization"].ToString().Replace("Bearer ", "");
+
+                var res = await userService.VerifyTokenAsync(token, _config);
+
+                return new ObjectResult(new ResponseModel<AuthorizationResponseModel>()
+                {
+                    Data = _mapper.Map<AuthorizationResponseModel>(res),
+                    Seccessfully = true
+                });
+            }
+            catch (Exception ex)
+            {
+                return new ObjectResult(new ResponseModel<AuthorizationResponseModel>()
+                {
+                    Seccessfully = false,
+                    Message = ex.Message,
+                    Code = 500
+                });
+            }
+        }
     }
 }

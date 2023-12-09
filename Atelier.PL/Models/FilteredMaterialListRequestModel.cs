@@ -2,9 +2,9 @@
 {
     public class FilteredMaterialListRequestModel
     {
-        public string Name { get; set; }
+        public string? Name { get; set; }
         public int? PageNumber { get; set; }
         public int? PageSize { get; set; }
-        public string Sort { get; set; }
+        public string? Sort { get; set; }
     }
 }

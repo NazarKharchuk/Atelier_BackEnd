@@ -95,6 +95,64 @@ namespace Atelier.BLL.Services
             }
         }
 
+        public async Task<AuthorizationResponseDTO> VerifyTokenAsync(string token, IConfiguration _config)
+        {
+            try
+            {
+                var tokenHandler = new JwtSecurityTokenHandler();
+                var key = Encoding.UTF8.GetBytes(_config["Jwt:Key"]);
+                var tokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = new SymmetricSecurityKey(key),
+                    ValidateIssuer = true,
+                    ValidIssuer = _config["Jwt:Issuer"],
+                    ValidateAudience = true,
+                    ValidAudience = _config["Jwt:Audience"],
+                    ValidateLifetime = true,
+                    ClockSkew = TimeSpan.Zero
+                };
+
+                SecurityToken validatedToken;
+                var principal = tokenHandler.ValidateToken(token, tokenValidationParameters, out validatedToken);
+
+                if (validatedToken == null || !(validatedToken is JwtSecurityToken jwtToken) || !jwtToken.Header.Alg.Equals(SecurityAlgorithms.HmacSha256, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    throw new ValidationException("Invalid token", "");
+                }
+
+                var loginClaim = principal.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+                var roleClaim = principal.FindFirst(ClaimTypes.Role)?.Value;
+
+                if (string.IsNullOrEmpty(loginClaim) || string.IsNullOrEmpty(roleClaim))
+                {
+                    throw new ValidationException("Invalid token claims", "");
+                }
+
+                var user = DataBase.Users.Find(f => f.Login == loginClaim);
+                var user_with_employee_data = await DataBase.Users.Get(user.FirstOrDefault().UserId);
+
+                if (user_with_employee_data == null)
+                {
+                    throw new ValidationException("Не коректний логін чи пароль користувача", ""); 
+                };
+
+                token = Generate(_mapper.Map<UserDTO>(user.FirstOrDefault()), _config);
+                return new AuthorizationResponseDTO
+                {
+                    Token = token,
+                    Id = user_with_employee_data.Employee.UserId,
+                    Role = user_with_employee_data.Role,
+                    Name = "" + user_with_employee_data.Employee.FirstName + " " + user_with_employee_data.Employee.LastName
+                };
+
+            }
+            catch (Exception ex)
+            {
+                throw new ValidationException("Token validation error", ex.Message);
+            }
+        }
+
         public static string HashPassowrd(string password)
         {
             using (var sha256 = SHA256.Create())
@@ -120,7 +178,7 @@ namespace Atelier.BLL.Services
             var token = new JwtSecurityToken(_config["Jwt:Issuer"],
               _config["Jwt:Audience"],
               claims,
-              expires: DateTime.Now.AddMinutes(15),
+              expires: DateTime.Now.AddMinutes(30),
               signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);

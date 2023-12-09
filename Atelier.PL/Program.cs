@@ -29,6 +29,20 @@ namespace Atelier.PL
 
             // Add services to the container.
 
+            builder.Services.AddCors(options =>
+            {
+                options.AddPolicy("CORSPolicy",
+                    builder =>
+                    {
+                        builder
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials()
+                        .WithExposedHeaders("X-Pagination-Total-Count")
+                        .SetIsOriginAllowed(origin => true);
+                    });
+            });
+
             builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options => {
                     options.TokenValidationParameters = new TokenValidationParameters
@@ -116,10 +130,18 @@ namespace Atelier.PL
 
             app.UseHttpsRedirection();
 
+            app.UseRouting();
+
+            app.UseCors("CORSPolicy");
+
             app.UseAuthentication();
 
             app.UseAuthorization();
 
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.MapControllers();
+            });
 
             app.MapControllers();
 

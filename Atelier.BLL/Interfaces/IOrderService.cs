@@ -1,5 +1,6 @@
 ﻿using Atelier.BLL.DTO;
 using Atelier.DAL.Entities;
+using Atelier.DAL.Enums;
 
 namespace Atelier.BLL.Interfaces
 {
@@ -18,5 +19,6 @@ namespace Atelier.BLL.Interfaces
         byte[] ExportOrders();
         Tuple<int, int> GetMaxMinYear();
         List<MonthStatisticResponseDTO> GetYearStatistic(int year);
+        Task UpdateStatus(int order_id, Status newStatus);
     }
 }

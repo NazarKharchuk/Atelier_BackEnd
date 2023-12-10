@@ -1,6 +1,7 @@
 ﻿using Atelier.BLL.DTO;
 using Atelier.BLL.Interfaces;
 using Atelier.DAL.Entities;
+using Atelier.DAL.Enums;
 using Atelier.PL.Models;
 using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
@@ -91,6 +92,22 @@ namespace Atelier.PL.Controllers
             catch (Exception ex)
             {
                 return new ObjectResult(new ResponseModel<OrderModel>() { Seccessfully = false, Code = 404, Message = ex.Message });
+            }
+        }
+
+        [Route("api/orders/{id}/status")]
+        [HttpPut]
+        public async Task<IActionResult> PutOrderStatus(int id, [FromBody] Status newStatus)
+        {
+            try
+            {
+                await orderService.UpdateStatus(id, newStatus);
+
+                return new ObjectResult(new ResponseModel<string>() { Seccessfully = true });
+            }
+            catch (Exception ex)
+            {
+                return new ObjectResult(new ResponseModel<string>() { Seccessfully = false, Code = 404, Message = ex.Message });
             }
         }
 

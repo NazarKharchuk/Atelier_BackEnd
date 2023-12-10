@@ -128,6 +128,42 @@ namespace Atelier.BLL.Services
             await DataBase.SaveAsync();
         }
 
+        public async Task UpdateStatus(int order_id, Status newStatus)
+        {
+            Order order = await DataBase.Orders.Get(order_id);
+            if (order == null)
+                throw new Exception("Замовлення не знайдено");
+            if ((int)order.Status == (int)Status.Completed)
+                throw new Exception("Завершене замовлення змінювати не можна");
+            if ((int)order.Status > (int)newStatus)
+                throw new Exception("Статус не можна понижувати до попередніх етапів");
+            if ((int)newStatus == (int)Status.Completed)
+            {
+                using (var transaction = await DataBase.BeginTransactionAsync())
+                {
+                    try
+                    {
+                        var res = await GetAllMaterials(order_id);
+                        foreach (var i in res)
+                        {
+                            await UpdateReserve(i.MaterialId, -i.Count);
+                            await UpdateQuantity(i.MaterialId, -i.Count);
+                        }
+                        await DataBase.SaveAsync();
+                        transaction.Commit();
+                    }
+                    catch (Exception e)
+                    {
+                        transaction.Rollback();
+                        throw new Exception($"Помилка не етапі скасування резерву матеріалів виконаного замовлення:({e.Message})");
+                    }
+                }
+            }
+            order.Status = newStatus;
+            DataBase.Orders.Update(order);
+            await DataBase.SaveAsync();
+        }
+
         public async Task<List<OrderMaterialDTO>> GetAllMaterials(int order_id)
         {
             var o = await DataBase.Orders.Get(order_id);

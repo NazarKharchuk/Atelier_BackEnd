@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Atelier.PL.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [ApiController]
     public class WorksTypeController : ControllerBase
     {
@@ -20,7 +20,7 @@ namespace Atelier.PL.Controllers
             _mapper = mapper;
         }
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [Route("api/worksTypes")]
         [HttpGet]
         public IActionResult GetWorksTypes([FromQuery] FilteredListRequestModel filter)
@@ -33,7 +33,7 @@ namespace Atelier.PL.Controllers
             });
         }
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [Route("api/worksTypes/{id}")]
         [HttpGet]
         public async Task<IActionResult> GetWorksType(int id)
@@ -55,7 +55,7 @@ namespace Atelier.PL.Controllers
 
         }
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [Route("api/worksTypes")]
         [HttpPost]
         public async Task<IActionResult> PostWorksType([FromBody] WorksTypeModel item)
@@ -72,7 +72,7 @@ namespace Atelier.PL.Controllers
             }
         }
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [Route("api/worksTypes/{id}")]
         [HttpPut]
         public async Task<IActionResult> PutWorksType(int id, [FromBody] WorksTypeModel item)

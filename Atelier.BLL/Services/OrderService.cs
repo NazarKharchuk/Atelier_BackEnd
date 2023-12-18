@@ -67,7 +67,7 @@ namespace Atelier.BLL.Services
                 throw new ValidationException("Не коректна кінцева дата", "");
             if (await DataBase.Clients.Get(item.ClientId) == null)
                 throw new ValidationException("Неіснуючий клієнт", "");
-            if (item.EmployeeId != null && await DataBase.Clients.Get((int)item.EmployeeId) == null)
+            if (item.EmployeeId != null && await DataBase.Employees.Get((int)item.EmployeeId) == null)
                 throw new ValidationException("Неіснуючий працівник", "");
             if (await DataBase.WorksTypes.Get(item.WorkTypeId) == null)
                 throw new ValidationException("Неіснуюча послуга", "");
@@ -84,7 +84,7 @@ namespace Atelier.BLL.Services
                 throw new ValidationException("Не коректна кінцева дата", "");
             if (await DataBase.Clients.Get(item.ClientId) == null)
                 throw new ValidationException("Неіснуючий клієнт", "");
-            if (item.EmployeeId != null && await DataBase.Clients.Get((int)item.EmployeeId) == null)
+            if (item.EmployeeId != null && await DataBase.Employees.Get((int)item.EmployeeId) == null)
                 throw new ValidationException("Неіснуючий працівник", "");
             if (await DataBase.WorksTypes.Get(item.WorkTypeId) == null)
                 throw new ValidationException("Неіснуюча послуга", "");

@@ -9,7 +9,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Atelier.PL.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [ApiController]
     public class OrderController : ControllerBase
     {

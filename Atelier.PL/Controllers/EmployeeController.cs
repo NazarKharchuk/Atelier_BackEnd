@@ -7,7 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace Atelier.PL.Controllers
 {
-    //[Authorize]
+    [Authorize]
     [ApiController]
     public class EmployeeController : ControllerBase
     {
@@ -20,7 +20,7 @@ namespace Atelier.PL.Controllers
             _mapper = mapper;
         }
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [Route("api/employees")]
         [HttpGet]
         public IActionResult GetEmployees([FromQuery] FilteredListRequestModel filter)
@@ -33,7 +33,7 @@ namespace Atelier.PL.Controllers
             });
         }
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [Route("api/employees/{id}")]
         [HttpDelete]
         public async Task<IActionResult> DeleteEmployee(int id)
@@ -53,7 +53,7 @@ namespace Atelier.PL.Controllers
             }
         }
 
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         [Route("api/employees")]
         [HttpPost]
         public async Task<IActionResult> PostEmployee([FromBody] EmployeeRegisterModel item)

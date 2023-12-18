@@ -21,7 +21,7 @@ namespace Atelier.PL.Controllers
             _mapper = mapper;
         }
 
-        //[AllowAnonymous]
+        [AllowAnonymous]
         [Route("api/login")]
         [HttpPost]
         public async Task<IActionResult> Login([FromBody] UserLoginModel userLogin)
